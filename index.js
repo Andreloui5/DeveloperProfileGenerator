@@ -7,6 +7,10 @@ const fs = require("fs"),
   convertFactory = require('electron-html-to');
 const generateHTML = require("./generateHTML");
 
+var conversion = convertFactory({
+  converterPath: convertFactory.converters.PDF
+});
+ 
 
 //Asks initial questions of the user
 inquirer
@@ -50,11 +54,18 @@ inquirer
 
         //Call generateHTML to make HTML doc
         let makeHTML = generateHTML(userChoice, profileInfo, totalStars);
-
-        fs.writeFile("craig.html", makeHTML, function (err) {
+        fs.writeFile(`${profileInfo.name}.html`, makeHTML, function (err) {
           if (err) {
             throw err;
           }
+        });
+        //convert the HTML doc into a pdf
+        conversion({ html: makeHTML }, function(err, result) {
+          if (err) {
+            return console.error(err);
+          }
+          result.stream.pipe(fs.createWriteStream(`${profileInfo.name}.pdf`));
+          conversion.kill();
         });
       });
     });
