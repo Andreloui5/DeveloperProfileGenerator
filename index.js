@@ -5,24 +5,8 @@ const inquirer = require("inquirer");
 const electron = require("electron");
 const fs = require("fs"),
   convertFactory = require('electron-html-to');
-const generateHTML = require("./generateHTML");
+const generate= require("./generateHTML");
 
-//This section of code was taken from npmjs.com/package/electron-html-to
-// let conversion = convertFactory({
-//     converterPath: convertFactory.converters.PDF
-//     });
-
-// conversion({ html: '<h1>Hello World</h1>' }, function(err, result) {
-//     if (err) {
-//         return console.error(err);
-//     }
-
-//     console.log(result.numberOfPages);
-//     console.log(result.logs);
-//     result.stream.pipe(fs.createWriteStream('/path/to/anywhere.pdf'));
-//     conversion.kill(); // necessary if you use the electron-server strategy, see bellow for details
-//     });
-//end section taken from npmjs.com
 
 //Asks initial questions of the user
 inquirer
@@ -41,33 +25,36 @@ inquirer
       choices: ["green", "blue", "pink", "red"],
     }
   ])
-  .then(function (data) {
-    console.log(`${data.username}, ${data.color}`);
+  .then(function (res) {
+    console.log(`${res.username}, ${res.color}`);
       //URLs for our 2 axios requests
-      const queryUrl1 = `https://api.github.com/users/${data.username}`;
-      const queryUrl2 = `https://api.github.com/users/${data.username}/repos`;
+      const queryUrl1 = `https://api.github.com/users/${res.username}`;
+      const queryUrl2 = `https://api.github.com/users/${res.username}/repos`;
 
       //First axios request
       axios.get(queryUrl1).then( function(usernameResult) {
-        // console.log(usernameResult);
-        //store result in a variable
-        const profileInfo = usernameResult;
+        // console.log(usernameResult.data);
+        //store needed results in a variable
+        const profileInfo = usernameResult.data;
+        console.log(profileInfo);
 
-        //make second axios request
-        axios.get(queryUrl2).then( function(userRepoResult) {
-          console.log(userRepoResult);
-          // store result in a variable
-          const repoInfo = userRepoResult;
-  
-        });
-
-      });
-
+        // make second axios request
+        axios.get(queryUrl2).then( function(result) {
+          // console.log(result);
+          let repoArray = result.data
+          // go through each repo and add all stars
+          let totalStars = 0
+          repoArray.forEach(repo => totalStars += repo.stargazers_count);
+          console.log(totalStars);
+          
+          
+        //Call generateHTML to make HTML doc
         // fs.writeFile("repos.txt", repoNamesStr, function (err) {
         //   if (err) {
         //     throw err;
         //   }
-
-        //   console.log(`Saved ${repoNames.length} repos`);
         // });
+        });
+
+      });
       });
