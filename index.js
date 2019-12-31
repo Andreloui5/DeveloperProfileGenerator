@@ -4,7 +4,7 @@ const axios = require("axios");
 const inquirer = require("inquirer");
 const electron = require("electron");
 const fs = require("fs"),
-    convertFactory = require('electron-html-to');
+  convertFactory = require('electron-html-to');
 const generateHTML = require("./generateHTML");
 
 //This section of code was taken from npmjs.com/package/electron-html-to
@@ -16,7 +16,7 @@ const generateHTML = require("./generateHTML");
 //     if (err) {
 //         return console.error(err);
 //     }
-    
+
 //     console.log(result.numberOfPages);
 //     console.log(result.logs);
 //     result.stream.pipe(fs.createWriteStream('/path/to/anywhere.pdf'));
@@ -24,41 +24,50 @@ const generateHTML = require("./generateHTML");
 //     });
 //end section taken from npmjs.com
 
+//Asks initial questions of the user
 inquirer
   .prompt([
+    //Finds user's Github username
     {
       type: "input",
       message: "What is your GitHub username?",
       name: "username"
     },
+    //Finds what color the user likes (to use in final pdf)
     {
       type: "checkbox",
       name: "color",
       message: "Which color is your favorite?",
       choices: ["green", "blue", "pink", "red"],
-  }
+    }
   ])
   .then(function (data) {
     console.log(`${data.username}, ${data.color}`);
-  }
-    // function({username}, {color}) {
-  //   const queryUrl = `https://api.github.com/users/${username}/repos?per_page=100`;
+      //URLs for our 2 axios requests
+      const queryUrl1 = `https://api.github.com/users/${data.username}`;
+      const queryUrl2 = `https://api.github.com/users/${data.username}/repos`;
 
-  //   axios.get(queryUrl).then(function(usernameResult) {
-  //     const repoNames = usernameResult.data.map(function(repo) {
-  //       return repo.name;
-  //     });
+      //First axios request
+      axios.get(queryUrl1).then( function(usernameResult) {
+        // console.log(usernameResult);
+        //store result in a variable
+        const profileInfo = usernameResult;
 
-  //     const repoNamesStr = repoNames.join("\n");
-
-  //     fs.writeFile("repos.txt", repoNamesStr, function(err) {
-  //       if (err) {
-  //         throw err;
-  //       }
-
-  //       console.log(`Saved ${repoNames.length} repos`);
-  //     });
-  //   });
-  // }
-  );
+        //make second axios request
+        axios.get(queryUrl2).then( function(userRepoResult) {
+          console.log(userRepoResult);
+          // store result in a variable
+          const repoInfo = userRepoResult;
   
+        });
+
+      });
+
+        // fs.writeFile("repos.txt", repoNamesStr, function (err) {
+        //   if (err) {
+        //     throw err;
+        //   }
+
+        //   console.log(`Saved ${repoNames.length} repos`);
+        // });
+      });
