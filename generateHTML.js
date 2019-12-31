@@ -25,7 +25,7 @@ const colors = {
   }
 };
 
-function generateHTML(res, profileInfo, totalStars) {
+function generateHTML(userChoice, profileInfo, totalStars) {
   return `<!DOCTYPE html>
 <html lang="en">
    <head>
@@ -52,7 +52,7 @@ function generateHTML(res, profileInfo, totalStars) {
          height: 100%;
          }
          .wrapper {
-         background-color: ${colors[res.color].wrapperBackground};
+         background-color: ${colors[userChoice].wrapperBackground};
          padding-top: 100px;
          }
          body {
@@ -94,8 +94,8 @@ function generateHTML(res, profileInfo, totalStars) {
          display: flex;
          justify-content: center;
          flex-wrap: wrap;
-         background-color: ${colors[res.color].headerBackground};
-         color: ${colors[res.color].headerColor};
+         background-color: ${colors[userChoice].headerBackground};
+         color: ${colors[userChoice].headerColor};
          padding: 10px;
          width: 95%;
          border-radius: 6px;
@@ -106,7 +106,7 @@ function generateHTML(res, profileInfo, totalStars) {
          border-radius: 50%;
          object-fit: cover;
          margin-top: -75px;
-         border: 6px solid ${colors[res.color].photoBorderColor};
+         border: 6px solid ${colors[userChoice].photoBorderColor};
          box-shadow: rgba(0, 0, 0, 0.3) 4px 1px 20px 4px;
          }
          .photo-header h1, .photo-header h2 {
@@ -149,8 +149,8 @@ function generateHTML(res, profileInfo, totalStars) {
          .card {
            padding: 20px;
            border-radius: 6px;
-           background-color: ${colors[res.color].headerBackground};
-           color: ${colors[res.color].headerColor};
+           background-color: ${colors[userChoice].headerBackground};
+           color: ${colors[userChoice].headerColor};
            margin: 20px;
          }
          
