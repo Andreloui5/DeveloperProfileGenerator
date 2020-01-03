@@ -10,9 +10,9 @@ The user simply needs to answer the questions when prompted, and the application
 ## Technologies
 This site was written using:
 * Node.js
-    *Inquirer
-    *Axios
-    *Electron-html-to
+* Inquirer
+* Axios
+* Electron-html-to
 * Javascript
 * HTML
 * CSS
